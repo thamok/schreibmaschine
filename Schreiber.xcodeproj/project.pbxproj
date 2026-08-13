@@ -1,0 +1,192 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = { };
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1E08BDC283D5D602F4FB6122 /* SchreiberApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5972EE355D229C1401051F6F /* SchreiberApp.swift */; };
+		BDC371DFCA66FA3F968C0782 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1384E753594296556542C1AF /* ContentView.swift */; };
+		3FBB0E5589A6E1BDD66EE54C /* EditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029D4A01C0A3B9736561D360 /* EditorViewModel.swift */; };
+		D7DDF995E447B72527F8E634 /* EditorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBF0E2B6EC2E0DE7C653CF6 /* EditorCommand.swift */; };
+		6992803FAA59BA8791D58ABA /* CodeTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B22998519B13FB3BA49BA /* CodeTextView.swift */; };
+		352C06299A3744C65C55A4BD /* CodeEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4886945AE96DF101C0C7DD3 /* CodeEditorView.swift */; };
+		EE6B71D52DE54DDA0F55F551 /* CodeEditProposal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B3736FCBC2D2427E1A10A6 /* CodeEditProposal.swift */; };
+		47218DD0DC04316B633AD27B /* FoundationModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F7FE97E37B85B4C405B89E /* FoundationModelService.swift */; };
+		CCF570B85FB712CBBBB0DD31 /* AIAssistantBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBE0876BD9778C8658DDEBE /* AIAssistantBar.swift */; };
+		3E20D3429AC75A272256ED4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90534D37816EFD6336BD2FF8 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5972EE355D229C1401051F6F /* SchreiberApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchreiberApp.swift; sourceTree = "<group>"; };
+		1384E753594296556542C1AF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		029D4A01C0A3B9736561D360 /* EditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewModel.swift; sourceTree = "<group>"; };
+		6FBF0E2B6EC2E0DE7C653CF6 /* EditorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorCommand.swift; sourceTree = "<group>"; };
+		1F7B22998519B13FB3BA49BA /* CodeTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTextView.swift; sourceTree = "<group>"; };
+		B4886945AE96DF101C0C7DD3 /* CodeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorView.swift; sourceTree = "<group>"; };
+		27B3736FCBC2D2427E1A10A6 /* CodeEditProposal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditProposal.swift; sourceTree = "<group>"; };
+		20F7FE97E37B85B4C405B89E /* FoundationModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelService.swift; sourceTree = "<group>"; };
+		ECBE0876BD9778C8658DDEBE /* AIAssistantBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIAssistantBar.swift; sourceTree = "<group>"; };
+		90534D37816EFD6336BD2FF8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		38A007151ABE87CC01A5B6E9 /* Schreiber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Schreiber.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7561BFB015D8F536760CB671 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DC76E9F0C0006E8F919E0C51 = {isa = PBXGroup; children = (3E9A89CE7166FCEDEDA9D838 /* Schreiber */, FBDC4F23F93125BBEEAE800C /* Products */, ); sourceTree = "<group>"; };
+		FBDC4F23F93125BBEEAE800C /* Products */ = {isa = PBXGroup; children = (38A007151ABE87CC01A5B6E9 /* Schreiber.app */, ); name = Products; sourceTree = "<group>"; };
+		3E9A89CE7166FCEDEDA9D838 /* Schreiber */ = {isa = PBXGroup; children = (7D1043473D55BFA90E8530D3 /* App */, AB41949825606DA179DB7C89 /* Editor */, 141A92417F71895E56C4A5DA /* AI */, EC96667AC8C50460893F4A00 /* Documents */, 0189424A5A60FED329FA868E /* Resources */, ); path = Schreiber; sourceTree = "<group>"; };
+		7D1043473D55BFA90E8530D3 /* App */ = {isa = PBXGroup; children = (5972EE355D229C1401051F6F /* SchreiberApp.swift */, 1384E753594296556542C1AF /* ContentView.swift */, ); path = App; sourceTree = "<group>"; };
+		AB41949825606DA179DB7C89 /* Editor */ = {isa = PBXGroup; children = (6FBF0E2B6EC2E0DE7C653CF6 /* EditorCommand.swift */, 1F7B22998519B13FB3BA49BA /* CodeTextView.swift */, B4886945AE96DF101C0C7DD3 /* CodeEditorView.swift */, ); path = Editor; sourceTree = "<group>"; };
+		141A92417F71895E56C4A5DA /* AI */ = {isa = PBXGroup; children = (27B3736FCBC2D2427E1A10A6 /* CodeEditProposal.swift */, 20F7FE97E37B85B4C405B89E /* FoundationModelService.swift */, ECBE0876BD9778C8658DDEBE /* AIAssistantBar.swift */, ); path = AI; sourceTree = "<group>"; };
+		EC96667AC8C50460893F4A00 /* Documents */ = {isa = PBXGroup; children = (029D4A01C0A3B9736561D360 /* EditorViewModel.swift */, ); path = Documents; sourceTree = "<group>"; };
+		0189424A5A60FED329FA868E /* Resources */ = {isa = PBXGroup; children = (90534D37816EFD6336BD2FF8 /* Assets.xcassets */, ); path = Resources; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0E8A3AD980EC179856012B7E /* Schreiber */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 651ECA092BE81738918D8CDB /* Build configuration list for PBXNativeTarget "Schreiber" */;
+			buildPhases = (
+				BCE16DD0260827ECF338C787 /* Sources */,
+				7561BFB015D8F536760CB671 /* Frameworks */,
+				ECE2D868E17AEF81A05610A3 /* Resources */,
+			);
+			buildRules = ( );
+			dependencies = ( );
+			name = Schreiber;
+			productName = Schreiber;
+			productReference = 38A007151ABE87CC01A5B6E9 /* Schreiber.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		98F54143AB4E86B28C3AFEE0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					0E8A3AD980EC179856012B7E = { CreatedOnToolsVersion = 26.0; };
+				};
+			};
+			buildConfigurationList = F8C70E4123C9AE82C42562CC /* Build configuration list for PBXProject "Schreiber" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base, );
+			mainGroup = DC76E9F0C0006E8F919E0C51;
+			productRefGroup = FBDC4F23F93125BBEEAE800C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (0E8A3AD980EC179856012B7E /* Schreiber */, );
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ECE2D868E17AEF81A05610A3 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (3E20D3429AC75A272256ED4F /* Assets.xcassets in Resources */, ); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BCE16DD0260827ECF338C787 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E08BDC283D5D602F4FB6122 /* SchreiberApp.swift in Sources */,
+				BDC371DFCA66FA3F968C0782 /* ContentView.swift in Sources */,
+				3FBB0E5589A6E1BDD66EE54C /* EditorViewModel.swift in Sources */,
+				D7DDF995E447B72527F8E634 /* EditorCommand.swift in Sources */,
+				6992803FAA59BA8791D58ABA /* CodeTextView.swift in Sources */,
+				352C06299A3744C65C55A4BD /* CodeEditorView.swift in Sources */,
+				EE6B71D52DE54DDA0F55F551 /* CodeEditProposal.swift in Sources */,
+				47218DD0DC04316B633AD27B /* FoundationModelService.swift in Sources */,
+				CCF570B85FB712CBBBB0DD31 /* AIAssistantBar.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		CEC25DBC9F463CC1CC34CC84 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			}; name = Debug; };
+		8456983ABBF079E76AB41CC8 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			}; name = Release; };
+		1C66CCC1FDCC3FE0B50FFFE2 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Schreiber;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.thamo.schreibmaschine;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			}; name = Debug; };
+		541B4F2596E8095215634D4F /* Release */ = {isa = XCBuildConfiguration; buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Schreiber;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.thamo.schreibmaschine;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			}; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F8C70E4123C9AE82C42562CC /* Build configuration list for PBXProject "Schreiber" */ = {isa = XCConfigurationList; buildConfigurations = (CEC25DBC9F463CC1CC34CC84 /* Debug */, 8456983ABBF079E76AB41CC8 /* Release */, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		651ECA092BE81738918D8CDB /* Build configuration list for PBXNativeTarget "Schreiber" */ = {isa = XCConfigurationList; buildConfigurations = (1C66CCC1FDCC3FE0B50FFFE2 /* Debug */, 541B4F2596E8095215634D4F /* Release */, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+
+	};
+	rootObject = 98F54143AB4E86B28C3AFEE0 /* Project object */;
+}
