@@ -1,6 +1,12 @@
 import UIKit
 
 final class CodeTextView: UITextView {
+    var language: EditorLanguage = .plainText {
+        didSet { if oldValue != language { rehighlight() } }
+    }
+    private var completionTask: Task<Void, Never>?
+    private var ghostText = ""
+    private let ghostLabel = UILabel()
     private var modifierState: EditorModifierState = [] {
         didSet {
             codingAccessoryView.setModifierState(modifierState)
@@ -28,6 +34,7 @@ final class CodeTextView: UITextView {
 
     override var keyCommands: [UIKeyCommand]? {
         [
+            UIKeyCommand(input: "\t", modifierFlags: [.alternate], action: #selector(acceptCompletion), discoverabilityTitle: "Accept Completion"),
             UIKeyCommand(input: "\t", modifierFlags: [], action: #selector(insertTab)),
             UIKeyCommand(input: "\t", modifierFlags: [.shift], action: #selector(outdent)),
             UIKeyCommand(
@@ -59,6 +66,91 @@ final class CodeTextView: UITextView {
             bottom: 32,
             right: 12
         )
+        ghostLabel.font = font
+        ghostLabel.textColor = .tertiaryLabel
+        ghostLabel.isHidden = true
+        ghostLabel.isUserInteractionEnabled = false
+        addSubview(ghostLabel)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard !ghostText.isEmpty,
+              let position = position(from: beginningOfDocument, offset: selectedRange.location),
+              let range = textRange(from: position, to: position) else { ghostLabel.isHidden = true; return }
+        let caret = firstRect(for: range)
+        ghostLabel.frame = CGRect(x: caret.minX, y: caret.minY, width: max(0, bounds.maxX - caret.minX - 12), height: max(22, caret.height))
+        ghostLabel.isHidden = false
+    }
+
+    func requestCompletion() {
+        completionTask?.cancel()
+        clearCompletion()
+        guard selectedRange.length == 0 else { return }
+        let snapshot = text ?? ""
+        let caret = selectedRange.location
+        let currentLanguage = language
+        completionTask = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(180))
+            guard !Task.isCancelled else { return }
+            let value = await FoundationModelService.shared.complete(file: snapshot, caretUTF16: caret, language: currentLanguage)
+            guard !Task.isCancelled, !value.isEmpty, let self,
+                  self.text == snapshot, self.selectedRange == NSRange(location: caret, length: 0) else { return }
+            ghostText = value
+            ghostLabel.text = value.components(separatedBy: .newlines).first
+            setNeedsLayout()
+        }
+    }
+
+    func didEdit() {
+        rehighlight()
+        requestCompletion()
+    }
+
+    func selectionDidChange() {
+        completionTask?.cancel()
+        clearCompletion()
+        requestCompletion()
+    }
+
+    private func clearCompletion() {
+        ghostText = ""
+        ghostLabel.text = nil
+        ghostLabel.isHidden = true
+    }
+
+    @objc private func acceptCompletion() {
+        guard !ghostText.isEmpty else { return }
+        let insertion = ghostText
+        clearCompletion()
+        insertText(insertion)
+    }
+
+    func rehighlight() {
+        let selection = selectedRange
+        let full = NSRange(location: 0, length: textStorage.length)
+        textStorage.beginEditing()
+        textStorage.setAttributes([
+            .font: UIFont.monospacedSystemFont(ofSize: 16, weight: .regular),
+            .foregroundColor: UIColor.label,
+        ], range: full)
+        highlight("\\\"(?:\\\\.|[^\\\"\\\\])*\\\"|'(?:\\\\.|[^'\\\\])*'", color: .systemRed)
+        highlight("(?m)//.*$|#(?![A-Fa-f0-9]{3,8}\\b).*$|/\\*[\\s\\S]*?\\*/|<!--[\\s\\S]*?-->", color: .systemGray)
+        highlight("\\b(?:class|struct|enum|protocol|extension|func|let|var|if|else|for|while|return|import|async|await|throws|try|switch|case|public|private|const|function|def|from|in|new|true|false|null|nil)\\b", color: .systemPurple)
+        highlight("\\b\\d+(?:\\.\\d+)?\\b", color: .systemOrange)
+        if language == .html || language == .markdown {
+            highlight("</?[A-Za-z][^>]*>|(?m)^#{1,6}\\s.*$|\\*\\*[^*]+\\*\\*", color: .systemBlue)
+        }
+        textStorage.endEditing()
+        selectedRange = selection
+    }
+
+    private func highlight(_ pattern: String, color: UIColor) {
+        guard let expression = try? NSRegularExpression(pattern: pattern) else { return }
+        let range = NSRange(location: 0, length: textStorage.length)
+        for match in expression.matches(in: textStorage.string, range: range) {
+            textStorage.addAttribute(.foregroundColor, value: color, range: match.range)
+        }
     }
 
     private func handleAccessoryAction(_ action: CodingAccessoryAction) {

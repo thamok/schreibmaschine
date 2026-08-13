@@ -6,6 +6,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A10000000000000000000001 /* TreeSitter in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* TreeSitter */; };
+		A20000000000000000000001 /* SwiftGitX in Frameworks */ = {isa = PBXBuildFile; productRef = A20000000000000000000003 /* SwiftGitX */; };
 		1E08BDC283D5D602F4FB6122 /* SchreiberApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5972EE355D229C1401051F6F /* SchreiberApp.swift */; };
 		BDC371DFCA66FA3F968C0782 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1384E753594296556542C1AF /* ContentView.swift */; };
 		3FBB0E5589A6E1BDD66EE54C /* EditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029D4A01C0A3B9736561D360 /* EditorViewModel.swift */; };
@@ -33,7 +35,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		7561BFB015D8F536760CB671 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };
+		7561BFB015D8F536760CB671 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000001 /* TreeSitter in Frameworks */, A20000000000000000000001 /* SwiftGitX in Frameworks */, ); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -60,6 +62,7 @@
 			dependencies = ( );
 			name = Schreiber;
 			productName = Schreiber;
+			packageProductDependencies = (A10000000000000000000003 /* TreeSitter */, A20000000000000000000003 /* SwiftGitX */, );
 			productReference = 38A007151ABE87CC01A5B6E9 /* Schreiber.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -83,6 +86,7 @@
 			knownRegions = (en, Base, );
 			mainGroup = DC76E9F0C0006E8F919E0C51;
 			productRefGroup = FBDC4F23F93125BBEEAE800C /* Products */;
+			packageReferences = (A10000000000000000000002 /* XCRemoteSwiftPackageReference "tree-sitter-xcframework" */, A20000000000000000000002 /* XCRemoteSwiftPackageReference "SwiftGitX" */, );
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (0E8A3AD980EC179856012B7E /* Schreiber */, );
@@ -186,6 +190,32 @@
 		F8C70E4123C9AE82C42562CC /* Build configuration list for PBXProject "Schreiber" */ = {isa = XCConfigurationList; buildConfigurations = (CEC25DBC9F463CC1CC34CC84 /* Debug */, 8456983ABBF079E76AB41CC8 /* Release */, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 		651ECA092BE81738918D8CDB /* Build configuration list for PBXNativeTarget "Schreiber" */ = {isa = XCConfigurationList; buildConfigurations = (1C66CCC1FDCC3FE0B50FFFE2 /* Debug */, 541B4F2596E8095215634D4F /* Release */, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A10000000000000000000002 /* XCRemoteSwiftPackageReference "tree-sitter-xcframework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/tree-sitter-xcframework";
+			requirement = { kind = upToNextMajorVersion; minimumVersion = 0.208.4; };
+		};
+		A20000000000000000000002 /* XCRemoteSwiftPackageReference "SwiftGitX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ibrahimcetin/SwiftGitX.git";
+			requirement = { kind = upToNextMajorVersion; minimumVersion = 0.4.0; };
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A10000000000000000000003 /* TreeSitter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000002 /* XCRemoteSwiftPackageReference "tree-sitter-xcframework" */;
+			productName = TreeSitter;
+		};
+		A20000000000000000000003 /* SwiftGitX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A20000000000000000000002 /* XCRemoteSwiftPackageReference "SwiftGitX" */;
+			productName = SwiftGitX;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 	};
 	rootObject = 98F54143AB4E86B28C3AFEE0 /* Project object */;
