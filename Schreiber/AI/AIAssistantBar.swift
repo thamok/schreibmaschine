@@ -5,6 +5,8 @@ struct AIAssistantBar: View {
 
     @State private var instruction = ""
     @State private var proposal: CodeEditProposal?
+    @State private var proposalRange = NSRange(location: 0, length: 0)
+    @State private var proposalDocument: URL?
     @State private var isWorking = false
 
     var body: some View {
@@ -19,6 +21,18 @@ struct AIAssistantBar: View {
                         Text(proposal.summary)
                             .font(.subheadline)
                             .lineLimit(2)
+
+                        ScrollView(.horizontal) {
+                            VStack(alignment: .leading, spacing: 3) {
+                                let source = editor.text as NSString
+                                let original = source.substring(with: NSIntersectionRange(proposalRange, NSRange(location: 0, length: source.length)))
+                                if !original.isEmpty { Text("− \(original)").foregroundStyle(.red) }
+                                Text("+ \(proposal.replacement)").foregroundStyle(.green)
+                            }
+                            .font(.caption.monospaced())
+                            .textSelection(.enabled)
+                        }
+                        .frame(maxHeight: 96)
                     }
 
                     Spacer()
@@ -28,7 +42,7 @@ struct AIAssistantBar: View {
                     }
 
                     Button("Apply") {
-                        editor.text = proposal.replacement
+                        editor.apply(proposal: proposal, range: proposalRange, document: proposalDocument)
                         self.proposal = nil
                     }
                     .buttonStyle(.borderedProminent)
@@ -77,6 +91,8 @@ struct AIAssistantBar: View {
         }
 
         isWorking = true
+        let requestedRange = editor.selection
+        let requestedDocument = editor.documentURL
 
         Task {
             defer { isWorking = false }
@@ -84,8 +100,11 @@ struct AIAssistantBar: View {
             do {
                 proposal = try await FoundationModelService.shared.proposeEdit(
                     file: editor.text,
-                    instruction: request
+                    instruction: request,
+                    selection: requestedRange
                 )
+                proposalRange = requestedRange
+                proposalDocument = requestedDocument
                 instruction = ""
             } catch {
                 editor.errorMessage = error.localizedDescription

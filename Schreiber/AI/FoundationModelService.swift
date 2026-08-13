@@ -7,6 +7,8 @@ actor FoundationModelService {
     static let shared = FoundationModelService()
 
     private let model = SystemLanguageModel.default
+    private lazy var completionSession = LanguageModelSession(model: model, instructions: "Produce only new text that belongs exactly at the cursor. Never quote, summarize, explain, or reproduce the supplied context. Prefer a useful 2-12 line continuation when the intent is clear; otherwise return a short insertion.")
+    private lazy var correctionSession = LanguageModelSession(model: model, instructions: "Return only the smallest corrected replacement for the selected text. Never reproduce the rest of the file or explain the change.")
 
     var isAvailable: Bool {
         model.isAvailable
@@ -21,15 +23,13 @@ actor FoundationModelService {
             throw FoundationModelServiceError.unavailable
         }
 
-        let session = LanguageModelSession(model: model) {
-            """
+        let session = LanguageModelSession(model: model, instructions: """
             You are the editing engine inside a native code editor.
-            Apply the user's instruction to the supplied source file.
+            Apply the user's instruction to the supplied source selection, or produce an insertion when given a caret.
             Preserve unrelated code, formatting, comments, and naming.
             Never wrap source code in Markdown fences.
-            Return a complete replacement for the file.
-            """
-        }
+            Return only the replacement for that selection or the source to insert at the caret.
+            """)
 
         let source = file as NSString
         let validSelection = NSIntersectionRange(selection, NSRange(location: 0, length: source.length))
@@ -40,13 +40,11 @@ actor FoundationModelService {
         USER INSTRUCTION:
         \(instruction)
 
-        ACTIVE SELECTION:
+        SOURCE SELECTION:
         \(selected)
 
-        CURRENT FILE:
-        <file>
+        FILE CONTEXT:
         \(file)
-        </file>
         """
 
         let response = try await session.respond(
@@ -57,19 +55,86 @@ actor FoundationModelService {
         return response.content
     }
 
-    func complete(file: String, caretUTF16: Int, language: EditorLanguage) async -> String {
+    func complete(file: String, caretUTF16: Int, language: EditorLanguage, alternative: Int = 0) async -> String {
         guard model.isAvailable else { return "" }
         let source = file as NSString
         let offset = min(caretUTF16, source.length)
-        let session = LanguageModelSession(model: model) {
-            "Complete source at the cursor. Return only the smallest useful insertion and never Markdown fences."
-        }
         let symbols = TreeSitterContext.symbols(in: file, language: language).prefix(80).joined(separator: ", ")
         do {
-            let response = try await session.respond(to: "Language: \(language.rawValue)\nVISIBLE SYMBOLS: \(symbols)\nBEFORE:\n\(source.substring(to: offset).suffix(6000))\n<CURSOR>\nAFTER:\n\(source.substring(from: offset).prefix(2000))")
-            return response.content.trimmingCharacters(in: .whitespacesAndNewlines)
+            let options = GenerationOptions(
+                samplingMode: alternative == 0 ? .random(top: 8, seed: 0) : .random(top: 32, seed: UInt64(alternative)),
+                temperature: alternative == 0 ? 0.25 : 0.7,
+                maximumResponseTokens: 240
+            )
+            let before = source.substring(to: offset)
+            let after = source.substring(from: offset)
+            let response = try await completionSession.respond(
+                to: "Language: \(language.rawValue)\nLocal symbols: \(symbols)\nText before cursor:\n\(before.suffix(2600))\n<INSERT HERE>\nText after cursor:\n\(after.prefix(700))",
+                generating: InlineCompletion.self,
+                options: options
+            )
+            return sanitize(response.content.insertion, before: before, language: language)
         } catch { return "" }
     }
+
+    func suggestReplacement(file: String, selection: NSRange, language: EditorLanguage) async -> String {
+        guard model.isAvailable else { return "" }
+        let source = file as NSString
+        let range = NSIntersectionRange(selection, NSRange(location: 0, length: source.length))
+        guard range.length > 0 else { return "" }
+        do {
+            let selected = source.substring(with: range)
+            let response = try await correctionSession.respond(
+                to: "Language: \(language.rawValue)\nSelected text:\n\(selected)\nNearby file context:\n\(file.prefix(5000))",
+                generating: InlineCompletion.self,
+                options: GenerationOptions(samplingMode: .random(top: 8, seed: 1), temperature: 0.2, maximumResponseTokens: 160)
+            )
+            let replacement = sanitize(response.content.insertion, before: "", language: language)
+            return replacement == selected ? "" : replacement
+        } catch { return "" }
+    }
+
+    private func sanitize(_ raw: String, before: String, language: EditorLanguage) -> String {
+        var value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        if value.hasPrefix("```") {
+            let lines = value.components(separatedBy: .newlines)
+            if lines.count >= 3, lines.last?.trimmingCharacters(in: .whitespaces) == "```" {
+                value = lines.dropFirst().dropLast().joined(separator: "\n")
+            }
+        }
+        if language.isProse {
+            value = value.replacingOccurrences(of: "\\r\\n", with: "\n")
+                .replacingOccurrences(of: "\\n", with: "\n")
+                .replacingOccurrences(of: "\\t", with: "\t")
+        }
+
+        let forbidden = ["<CURSOR>", "<INSERT HERE>", "VISIBLE SYMBOLS:", "Text before cursor:", "Text after cursor:"]
+        guard !forbidden.contains(where: { value.localizedCaseInsensitiveContains($0) }) else { return "" }
+
+        let contextTail = String(before.suffix(160)).trimmingCharacters(in: .whitespacesAndNewlines)
+        if contextTail.count >= 60, value.contains(contextTail) { return "" }
+
+        let maximumOverlap = min(400, min(before.count, value.count))
+        if maximumOverlap >= 8 {
+            for length in stride(from: maximumOverlap, through: 8, by: -1) {
+                let repeated = before.suffix(length)
+                if value.hasPrefix(repeated) {
+                    value.removeFirst(length)
+                    value = value.trimmingCharacters(in: .whitespacesAndNewlines)
+                    break
+                }
+            }
+        }
+
+        guard !value.isEmpty, value.components(separatedBy: .newlines).count <= 12 else { return "" }
+        return value
+    }
+}
+
+@Generable(description: "Text to insert directly into the editor at the cursor, with no explanation or surrounding context.")
+private struct InlineCompletion {
+    @Guide(description: "Only the exact new text to insert. Use real line breaks, never escaped newline text. Do not repeat any supplied context.")
+    var insertion: String
 }
 
 private enum TreeSitterContext {
