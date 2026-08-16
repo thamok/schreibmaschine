@@ -14,10 +14,8 @@
 		3FBB0E5589A6E1BDD66EE54D /* GitChangesSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029D4A01C0A3B9736561D361 /* GitChangesSheet.swift */; };
 		47218DD0DC04316B633AD27B /* FoundationModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F7FE97E37B85B4C405B89E /* FoundationModelService.swift */; };
 		6992803FAA59BA8791D58ABA /* CodeTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B22998519B13FB3BA49BA /* CodeTextView.swift */; };
-		A10000000000000000000001 /* TreeSitter in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* TreeSitter */; };
 		A20000000000000000000001 /* SwiftGitX in Frameworks */ = {isa = PBXBuildFile; productRef = A20000000000000000000003 /* SwiftGitX */; };
 		BDC371DFCA66FA3F968C0782 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1384E753594296556542C1AF /* ContentView.swift */; };
-		CCF570B85FB712CBBBB0DD31 /* AIAssistantBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBE0876BD9778C8658DDEBE /* AIAssistantBar.swift */; };
 		D7DDF995E447B72527F8E634 /* EditorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBF0E2B6EC2E0DE7C653CF6 /* EditorCommand.swift */; };
 		D7DDF995E447B72527F8E635 /* EditorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBF0E2B6EC2E0DE7C653CF7 /* EditorTheme.swift */; };
 		EE6B71D52DE54DDA0F55F551 /* CodeEditProposal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B3736FCBC2D2427E1A10A6 /* CodeEditProposal.swift */; };
@@ -36,7 +34,6 @@
 		6FBF0E2B6EC2E0DE7C653CF7 /* EditorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTheme.swift; sourceTree = "<group>"; };
 		90534D37816EFD6336BD2FF8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B4886945AE96DF101C0C7DD3 /* CodeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorView.swift; sourceTree = "<group>"; };
-		ECBE0876BD9778C8658DDEBE /* AIAssistantBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIAssistantBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +41,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A10000000000000000000001 /* TreeSitter in Frameworks */,
 				A20000000000000000000001 /* SwiftGitX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -65,7 +61,6 @@
 			children = (
 				27B3736FCBC2D2427E1A10A6 /* CodeEditProposal.swift */,
 				20F7FE97E37B85B4C405B89E /* FoundationModelService.swift */,
-				ECBE0876BD9778C8658DDEBE /* AIAssistantBar.swift */,
 			);
 			path = AI;
 			sourceTree = "<group>";
@@ -144,7 +139,6 @@
 			);
 			name = Schreiber;
 			packageProductDependencies = (
-				A10000000000000000000003 /* TreeSitter */,
 				A20000000000000000000003 /* SwiftGitX */,
 			);
 			productName = Schreiber;
@@ -176,7 +170,6 @@
 			);
 			mainGroup = DC76E9F0C0006E8F919E0C51;
 			packageReferences = (
-				A10000000000000000000002 /* XCRemoteSwiftPackageReference "tree-sitter-xcframework" */,
 				A20000000000000000000002 /* XCRemoteSwiftPackageReference "SwiftGitX" */,
 			);
 			productRefGroup = FBDC4F23F93125BBEEAE800C /* Products */;
@@ -214,7 +207,6 @@
 				352C06299A3744C65C55A4BD /* CodeEditorView.swift in Sources */,
 				EE6B71D52DE54DDA0F55F551 /* CodeEditProposal.swift in Sources */,
 				47218DD0DC04316B633AD27B /* FoundationModelService.swift in Sources */,
-				CCF570B85FB712CBBBB0DD31 /* AIAssistantBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,14 +328,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A10000000000000000000002 /* XCRemoteSwiftPackageReference "tree-sitter-xcframework" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzyzanowskim/tree-sitter-xcframework";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.208.4;
-			};
-		};
 		A20000000000000000000002 /* XCRemoteSwiftPackageReference "SwiftGitX" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ibrahimcetin/SwiftGitX.git";
@@ -355,11 +339,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A10000000000000000000003 /* TreeSitter */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A10000000000000000000002 /* XCRemoteSwiftPackageReference "tree-sitter-xcframework" */;
-			productName = TreeSitter;
-		};
 		A20000000000000000000003 /* SwiftGitX */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A20000000000000000000002 /* XCRemoteSwiftPackageReference "SwiftGitX" */;
