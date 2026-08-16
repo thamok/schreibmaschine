@@ -12,7 +12,9 @@ struct CodeEditorView: UIViewRepresentable {
     var wrapsLines: Bool
     var requestAIEdit: (String) -> Void
 
-    func makeCoordinator() -> Coordinator { Coordinator(text: $text, selection: $selection) }
+    func makeCoordinator() -> Coordinator {
+        Coordinator(text: $text, selection: $selection)
+    }
 
     func makeUIView(context: Context) -> CodeTextView {
         let textView = CodeTextView()
@@ -37,69 +39,47 @@ struct CodeEditorView: UIViewRepresentable {
         textView.editorFontSize = fontSize
         textView.wrapsLines = wrapsLines
         textView.requestAIEdit = requestAIEdit
-        let liveText = textView.logicalText
-        guard liveText != text, !context.coordinator.hasPendingText(liveText) else {
-            if !context.coordinator.hasPendingSelection && textView.selectedRange != selection {
-                textView.selectedRange = selection
-            }
+
+        if textView.logicalText != text {
+            textView.prepareForExternalTextUpdate()
+            textView.text = text
+            textView.selectedRange = clamped(selection, to: textView.text.utf16.count)
+            textView.rehighlight()
             return
         }
-        context.coordinator.cancelPending()
-        textView.prepareForExternalTextUpdate()
-        textView.text = text
-        textView.selectedRange = NSRange(location: min(selection.location, textView.text.utf16.count), length: min(selection.length, max(0, textView.text.utf16.count - selection.location)))
-        textView.rehighlight()
+
+        let target = clamped(selection, to: textView.text.utf16.count)
+        if textView.selectedRange != target {
+            textView.selectedRange = target
+        }
+    }
+
+    private func clamped(_ range: NSRange, to length: Int) -> NSRange {
+        let location = min(max(0, range.location), length)
+        return NSRange(
+            location: location,
+            length: min(max(0, range.length), max(0, length - location))
+        )
     }
 
     final class Coordinator: NSObject, UITextViewDelegate {
         @Binding private var text: String
         @Binding private var selection: NSRange
-        private var pendingText: String?
-        private var textWork: DispatchWorkItem?
-        private var pendingSelection: NSRange?
-        private var selectionWork: DispatchWorkItem?
 
         init(text: Binding<String>, selection: Binding<NSRange>) {
             _text = text
             _selection = selection
         }
 
-        var hasPendingSelection: Bool { pendingSelection != nil }
-        func hasPendingText(_ value: String) -> Bool { pendingText == value }
-
-        func cancelPending() {
-            textWork?.cancel()
-            selectionWork?.cancel()
-            pendingText = nil
-            pendingSelection = nil
-        }
-
         func textViewDidChange(_ textView: UITextView) {
-            guard let editor = textView as? CodeTextView, !editor.isPerformingGhostMutation else { return }
-            let value = editor.logicalText
-            pendingText = value
-            textWork?.cancel()
-            let work = DispatchWorkItem { [weak self] in
-                guard let self, self.pendingText == value else { return }
-                self.pendingText = nil
-                self.text = value
-            }
-            textWork = work
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.075, execute: work)
+            guard let editor = textView as? CodeTextView else { return }
+            text = editor.logicalText
+            selection = editor.selectedRange
             editor.didEdit()
         }
 
         func textViewDidChangeSelection(_ textView: UITextView) {
-            let value = textView.selectedRange
-            pendingSelection = value
-            selectionWork?.cancel()
-            let work = DispatchWorkItem { [weak self] in
-                guard let self, self.pendingSelection == value else { return }
-                self.pendingSelection = nil
-                self.selection = value
-            }
-            selectionWork = work
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.016, execute: work)
+            selection = textView.selectedRange
             (textView as? CodeTextView)?.selectionDidChange()
         }
     }

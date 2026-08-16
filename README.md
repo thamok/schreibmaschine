@@ -4,41 +4,33 @@ A native, local-first source editor for iPhone and iPad (iOS 27+).
 
 ## Editor
 
-- persistent app-owned `Documents/SmartStore/Projects` storage with a real starter
-  project, local project/folder/file creation, autosave, and Files visibility
-- explicit Files and iCloud Drive project/file import as secondary storage sources
-- TextKit-backed editing with a canonical UTF-16 selection/caret state
-- five intentionally dark editor palettes: Codex, Vercel, Cloudflare, Midnight,
-  and Copilot (plus dark app chrome)
-- syntax highlighting for Swift, JavaScript/TypeScript, Python, Ruby, Java, Go,
-  PHP, JSON, YAML, HTML, CSS, Markdown, shell scripts, and plain text
-- Markdown and HTML rich-text previews
-- coding keyboard accessory, hardware-keyboard commands, word-first taps,
-  double-tap completion, triple-tap structural closing, and long-press cursor control
-- volume-button caret movement while this editor owns keyboard focus (the system still
-  changes the device volume; iOS offers no public API to suppress that)
+- app-owned local projects with Files visibility, plus Files/iCloud import
+- TextKit-backed editing with UTF-16 caret and selection state
+- dark editor themes, configurable monospace fonts, line wrapping, and line numbers
+- lightweight syntax highlighting for common source, markup, and data formats
+- Markdown and HTML preview
+- find/replace, hardware-keyboard commands, virtual modifiers, and a compact symbols keyboard
+- local Git operations through SwiftGitX/libgit2
 
-## On-device completion
+## Ghost completion
 
-Apple Foundation Models generates inline ghost completions entirely on device.
-Deterministic lexical suggestions appear immediately; model requests debounce for
-70 ms, cancel as soon as the buffer or selection changes, and are discarded unless
-both the source snapshot and caret still match. Tab accepts a visible completion
-before it inserts indentation. The accessory checkmark accepts and its regenerate
-button (or a double tap) requests another longer completion. Tree-sitter extracts in-file symbols for the
-completion context without uploading project contents.
+Ghost completion intentionally has a small pipeline:
 
-Tree-sitter grammars currently provide structural context for Swift, Python,
-Ruby, Java, Go, PHP, JSON, HTML, CSS, and Markdown. Other detected languages use
-the same completion pipeline without a syntax tree until a grammar is added.
+1. A document-local word completion appears immediately when the current token has a strong match elsewhere in the nearby buffer.
+2. After a short idle debounce, Apple Foundation Models gets a small prefix/suffix window around the caret.
+3. Every model request uses a fresh `LanguageModelSession`, so rejected completions never leak into later requests.
+4. A completion is rendered as an overlay at the caret. It is never inserted into `NSTextStorage` until accepted.
+5. Typing characters that match the visible ghost consumes those characters from the suggestion instead of throwing it away and regenerating.
+6. Tab accepts a visible suggestion; otherwise Tab inserts indentation.
+
+The completion path does not parse the project or build a symbol index. Tree-sitter is deliberately not a dependency. The on-device model is treated as a best-effort semantic fallback, not as the editor's source of truth.
+
+## AI edits
+
+Selection/caret-aware edits use Apple Foundation Models entirely on device. Edit requests also use fresh sessions and bounded local context. The editor shows the proposed replacement before applying it.
 
 ## Projects and Git
 
-Open a local folder from the document picker to browse and edit its source files.
-If it is a Git worktree, the toolbar shows the current branch and change count.
-The source-control menu stages, commits, adds HTTPS/SSH remotes, fetches, and pushes
-via SwiftGitX/libgit2; the app does not try to spawn a nonexistent `git` process on
-iOS. Credentials are handled by the system/provider and are never stored in the app.
+Open a local folder from the document picker to browse and edit its source files. If it is a Git worktree, the editor can show changes, stage the current file, commit, fetch, add remotes, and push through SwiftGitX/libgit2. The app does not spawn a `git` process on iOS.
 
-Package resolution and a full build require Xcode 27 because the app uses the
-iOS 27 Foundation Models framework.
+Package resolution and a full build require Xcode 27 because the app uses the iOS 27 Foundation Models framework.
